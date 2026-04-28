@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>notebook-viewer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='viewer.css') }}">
+<script>
+window.NOTEBOOK_VIEWER_CONFIG = {
+  sectionPrefetchDistance: {{ section_prefetch_distance }},
+  maxSectionCacheEntries: {{ max_section_cache_entries }},
+  cacheDirName: {{ cache_dir_name|tojson }}
+};
+</script>
+</head>
+<body data-theme="device">
+<div id="app">
+  <header class="topbar">
+    <button class="icon-btn mobile-only" id="outline-toggle" type="button" aria-label="Open outline">
+      <span class="icon-lines"></span>
+    </button>
+    <div class="brand">Notebook Viewer</div>
+    <div class="select-wrap"><select id="notebook-select" aria-label="Notebook"></select></div>
+    <select class="theme-select" id="theme-select" aria-label="Theme">
+      <option value="device">Device</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+    <span class="meta-chip" id="notebook-meta">Loading</span>
+  </header>
+  <div class="workspace">
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="outline-head">
+        <span class="outline-title">Outline</span>
+        <button class="icon-btn mobile-only" id="outline-close" type="button" aria-label="Close outline">Close</button>
+      </div>
+      <nav class="outline" id="outline"></nav>
+    </aside>
+    <main class="reader" id="reader">
+      <div class="reader-progress"><span id="reader-progress"></span></div>
+      <div class="reader-inner">
+        <div class="reader-toolbar">
+          <div class="section-current">
+            <h1 class="section-title" id="section-title">Loading</h1>
+            <div class="section-meta" id="section-meta"></div>
+          </div>
+          <div class="section-actions">
+            <button class="icon-btn" id="expand-code" type="button">Expand code</button>
+            <button class="icon-btn" id="collapse-code" type="button">Collapse code</button>
+          </div>
+        </div>
+        <div id="cells" class="skeleton"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="{{ url_for('static', filename='viewer.js') }}"></script>
+</body>
+</html>

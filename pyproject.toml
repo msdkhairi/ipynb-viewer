@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipynb-viewer"
+version = "0.1.0"
+description = "A smooth local reader for saved Jupyter notebooks with lazy media output streaming."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Masoud KA", email = "pypi@masoudka.com" },
+]
+keywords = ["jupyter", "notebook", "viewer", "flask", "ipynb"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Flask",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+dependencies = [
+    "flask>=3.1,<4",
+    "Markdown>=3.9,<4",
+    "bleach[css]>=6.2,<7",
+    "Pillow>=10,<12",
+    "Pygments>=2.17,<3",
+]
+
+[project.scripts]
+notebook-viewer = "ipynb_viewer.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ipynb_viewer = ["templates/*.html", "static/*.css", "static/*.js"]
