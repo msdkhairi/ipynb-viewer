@@ -1,115 +1,171 @@
 # ipynb-viewer
 
-`ipynb-viewer` is a lightweight local Flask app for reading saved Jupyter
-notebooks as a smooth document. It builds an outline from markdown headings,
-shows notebook outputs first, keeps code cells collapsed by default, and serves
-large images or videos through lazy asset URLs instead of embedding base64 media
-inside the main UI JSON.
+[![PyPI](https://img.shields.io/pypi/v/ipynb-viewer.svg)](https://pypi.org/project/ipynb-viewer/)
+[![Python](https://img.shields.io/pypi/pyversions/ipynb-viewer.svg)](https://pypi.org/project/ipynb-viewer/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml/badge.svg)](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml)
 
-The viewer reads saved `.ipynb` files only. It does not execute notebook code.
+A smooth, local-first reader for saved Jupyter notebooks.
+
+`ipynb-viewer` turns an `.ipynb` file into a fast reading surface: markdown
+headings become an outline, outputs are shown first, code is collapsed behind
+syntax-highlighted expandable blocks, and large images or videos are loaded
+through lazy streamed asset URLs instead of being embedded into the main page
+payload.
+
+It reads saved notebooks only. It does not execute code.
+
+## Features
+
+- Markdown-derived outline with smooth section navigation.
+- Lazy image and video output loading for media-heavy notebooks.
+- Collapsed code cells with Pygments syntax highlighting.
+- Safe sanitized HTML output rendering with Bleach.
+- Light, dark, and device theme modes.
+- Local Flask server with no frontend build step.
+- Root-restricted notebook access for safer local browsing.
+- Small decoded media cache for faster repeat reads.
 
 ## Install
 
-From this checkout:
+```bash
+python -m pip install ipynb-viewer
+```
+
+For local development from a checkout:
 
 ```bash
-cd /home/workspace/UnivCollabSFU24/ipynb-viewer
 python -m pip install -e .
 ```
 
-After installation, the command is:
+## Quick Start
+
+Open a notebook on `http://localhost:8770`:
 
 ```bash
-notebook-viewer --help
+notebook-viewer --notebook analysis.ipynb --port 8770
 ```
 
-## Start And Stop
-
-Start the viewer on `http://localhost:8770`:
+Restrict the viewer to a specific project directory:
 
 ```bash
-notebook-viewer --root /home/workspace/UnivCollabSFU24 --notebook playground_video.ipynb --port 8770 --no-browser
+notebook-viewer --root ~/projects/my-analysis --notebook notebooks/report.ipynb --port 8770
+```
+
+Start without opening a browser:
+
+```bash
+notebook-viewer --root . --notebook analysis.ipynb --port 8770 --no-browser
 ```
 
 Stop a foreground server with `Ctrl-C`.
 
-For a background server:
-
-```bash
-notebook-viewer --root /home/workspace/UnivCollabSFU24 --notebook playground_video.ipynb --port 8770 --no-browser > notebook-viewer.log 2>&1 &
-echo $! > notebook-viewer.pid
-```
-
-Stop that background server:
-
-```bash
-kill "$(cat notebook-viewer.pid)"
-```
-
 ## CLI
 
 ```bash
-notebook-viewer --root . --notebook playground_video.ipynb --port 8770 --no-browser
+notebook-viewer [--root ROOT] [--notebook NOTEBOOK] [--host HOST] [--port PORT] [--no-browser]
 ```
 
 Options:
 
-- `--root`: directory that readable notebooks must stay inside
+- `--root`: directory that readable notebooks must stay inside, default `.`
 - `--notebook`: notebook path relative to `--root`
 - `--host`: bind host, default `0.0.0.0`
 - `--port`: bind port, default `8770`
 - `--no-browser`: do not open a browser automatically
 
-## Behavior
+## How It Works
 
-- Notebook access is restricted to the configured `--root`.
-- HTML outputs are sanitized with Bleach.
-- Code cells are syntax-highlighted with Pygments and still include the raw
-  source in section API responses.
-- Images and videos are decoded to `.notebook_viewer_cache/` and streamed from
-  `/api/asset/<asset_id>`.
-- Notebook and section payloads avoid embedding large base64 media.
-- Section JSON is cached in memory and invalidated when notebook mtime or size
-  changes.
+The viewer parses saved notebook JSON with the Python standard library and
+caches parsed notebooks by path, mtime, and size. Markdown headings define the
+outline. Selecting or scrolling to a section loads the cells for that section,
+while image and video outputs are represented as asset descriptors and streamed
+separately from `/api/asset/<asset_id>`.
+
+Supported output behavior:
+
+- PNG, JPEG, GIF, SVG, and common video MIME outputs become lazy asset URLs.
+- HTML video data URLs are extracted into streamed video assets.
+- HTML tables and rich HTML outputs are sanitized before rendering.
+- stdout, stderr, tracebacks, and unsupported widgets use readable fallback
+  blocks.
+- Code cells include raw source and highlighted HTML in the section API.
+
+## API
+
+The local server exposes a small JSON/asset API:
+
+- `GET /api/notebooks`: list `.ipynb` files under `--root`
+- `GET /api/notebook?path=...`: return outline and section metadata
+- `GET /api/section?path=...&section=...`: return cells for one section
+- `GET /api/asset/<asset_id>`: stream decoded media assets
+
+Notebook and section JSON responses avoid embedding large base64 media payloads.
+
+## Security Notes
+
+`ipynb-viewer` is a local reader, not a notebook execution environment.
+
+- It never runs notebook code.
+- It restricts notebook access to the configured `--root`.
+- It sanitizes markdown-rendered HTML and notebook HTML outputs.
+- It serves decoded media assets from `.notebook_viewer_cache/`.
+
+As with any local web server, bind it only where you intend to expose it. The
+default host is `0.0.0.0`; use `--host 127.0.0.1` for loopback-only access.
 
 ## Development
 
-Run tests from this package directory:
+Install development tools and run the test suite:
 
 ```bash
+python -m pip install -e .
+python -m pip install build twine trove-classifiers tomli
 python -m unittest discover -s tests
 python -m compileall src
 ```
 
-Build the package:
+Build and validate distribution artifacts:
 
 ```bash
-python -m pip install --upgrade build twine
 python -m build
 python -m twine check dist/*
+python scripts/check_classifiers.py
 ```
 
-## Publish
+## Publishing
 
-Create PyPI and TestPyPI API tokens first. When Twine asks for credentials, use
-`__token__` as the username and paste the token as the password.
+Releases are intended to use PyPI Trusted Publishing from GitHub Actions.
 
-Upload to TestPyPI:
+One-time PyPI setup:
+
+1. Log into the PyPI account `masoudka`.
+2. Add a pending trusted publisher for:
+   - Owner: `msdkhairi`
+   - Repository: `ipynb-viewer`
+   - Workflow: `release.yml`
+   - Environment: `pypi`
+
+`Owner` is the GitHub repository owner, not the PyPI username.
+
+Release flow:
 
 ```bash
-python -m twine upload --repository testpypi dist/*
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
-Install from TestPyPI:
+Then create a GitHub release for that tag. The release workflow builds the
+artifacts, validates them, and publishes with PyPI Trusted Publishing.
+
+Manual fallback:
 
 ```bash
-python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple ipynb-viewer
-```
-
-Upload to PyPI:
-
-```bash
+python -m build
+python -m twine check dist/*
 python -m twine upload dist/*
 ```
 
-The package name `ipynb-viewer` is only guaranteed if PyPI accepts the upload.
+## License
+
+`ipynb-viewer` is distributed under the MIT License. See [LICENSE](LICENSE).

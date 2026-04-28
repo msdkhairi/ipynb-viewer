@@ -264,6 +264,8 @@ class NotebookViewerTests(unittest.TestCase):
             self.assertIn("fetchSectionPayload", js_text)
             self.assertIn("--code-keyword", css_text)
             self.assertIn(".code .k", css_text)
+            self.assertIn("--progress-track", css_text)
+            self.assertIn("height:var(--progress-height)", css_text)
             self.assertIn("formatCodeCellLabel", js_text)
             self.assertIn("Run ${cell.executionCount}", js_text)
             css.close()

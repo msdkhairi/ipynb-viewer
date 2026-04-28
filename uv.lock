@@ -80,11 +80,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bleach", extras = ["css"], specifier = ">=6.2,<7" },
-    { name = "flask", specifier = ">=3.1,<4" },
-    { name = "markdown", specifier = ">=3.9,<4" },
-    { name = "pillow", specifier = ">=10,<12" },
-    { name = "pygments", specifier = ">=2.17,<3" },
+    { name = "bleach", extras = ["css"], specifier = ">=6.1" },
+    { name = "flask", specifier = ">=3.0" },
+    { name = "markdown", specifier = ">=3.6" },
+    { name = "pillow", specifier = ">=10" },
+    { name = "pygments", specifier = ">=2.17" },
 ]
 
 [[package]]

@@ -13,6 +13,9 @@ license-files = ["LICENSE"]
 authors = [
     { name = "Masoud KA", email = "pypi@masoudka.com" },
 ]
+maintainers = [
+    { name = "masoudka", email = "pypi@masoudka.com" },
+]
 keywords = ["jupyter", "notebook", "viewer", "flask", "ipynb"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,16 +26,24 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Visualization",
     "Topic :: Text Processing :: Markup :: HTML",
 ]
 dependencies = [
-    "flask>=3.1,<4",
-    "Markdown>=3.9,<4",
-    "bleach[css]>=6.2,<7",
-    "Pillow>=10,<12",
-    "Pygments>=2.17,<3",
+    "flask>=3.0",
+    "Markdown>=3.6",
+    "bleach[css]>=6.1",
+    "Pillow>=10",
+    "Pygments>=2.17",
 ]
+
+[project.urls]
+Homepage = "https://github.com/msdkhairi/ipynb-viewer"
+Repository = "https://github.com/msdkhairi/ipynb-viewer"
+Issues = "https://github.com/msdkhairi/ipynb-viewer/issues"
+Changelog = "https://github.com/msdkhairi/ipynb-viewer/blob/main/CHANGELOG.md"
 
 [project.scripts]
 notebook-viewer = "ipynb_viewer.cli:main"
