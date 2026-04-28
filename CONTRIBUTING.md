@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve `ipynb-viewer`.
+Thanks for helping improve `ipynb-local-viewer`.
 
 ## Development Setup
 
@@ -31,7 +31,7 @@ python -m trove_classifiers check pyproject.toml
 
 ## Design Notes
 
-`ipynb-viewer` intentionally stays lightweight:
+`ipynb-local-viewer` intentionally stays lightweight:
 
 - Flask app, vanilla JavaScript, no frontend build step.
 - Saved notebooks only; no code execution.

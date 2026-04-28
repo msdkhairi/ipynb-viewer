@@ -1,13 +1,13 @@
-# ipynb-viewer
+# ipynb-local-viewer
 
-[![PyPI](https://img.shields.io/pypi/v/ipynb-viewer.svg)](https://pypi.org/project/ipynb-viewer/)
-[![Python](https://img.shields.io/pypi/pyversions/ipynb-viewer.svg)](https://pypi.org/project/ipynb-viewer/)
+[![PyPI](https://img.shields.io/pypi/v/ipynb-local-viewer.svg)](https://pypi.org/project/ipynb-local-viewer/)
+[![Python](https://img.shields.io/pypi/pyversions/ipynb-local-viewer.svg)](https://pypi.org/project/ipynb-local-viewer/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml/badge.svg)](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml)
 
 A smooth, local-first reader for saved Jupyter notebooks.
 
-`ipynb-viewer` turns an `.ipynb` file into a fast reading surface: markdown
+`ipynb-local-viewer` turns an `.ipynb` file into a fast reading surface: markdown
 headings become an outline, outputs are shown first, code is collapsed behind
 syntax-highlighted expandable blocks, and large images or videos are loaded
 through lazy streamed asset URLs instead of being embedded into the main page
@@ -29,7 +29,7 @@ It reads saved notebooks only. It does not execute code.
 ## Install
 
 ```bash
-python -m pip install ipynb-viewer
+python -m pip install ipynb-local-viewer
 ```
 
 For local development from a checkout:
@@ -104,7 +104,7 @@ Notebook and section JSON responses avoid embedding large base64 media payloads.
 
 ## Security Notes
 
-`ipynb-viewer` is a local reader, not a notebook execution environment.
+`ipynb-local-viewer` is a local reader, not a notebook execution environment.
 
 - It never runs notebook code.
 - It restricts notebook access to the configured `--root`.
@@ -140,13 +140,16 @@ Releases are intended to use PyPI Trusted Publishing from GitHub Actions.
 One-time PyPI setup:
 
 1. Log into the PyPI account `masoudka`.
-2. Add a pending trusted publisher for:
+2. Create or select the PyPI project `ipynb-local-viewer`.
+3. Add a pending trusted publisher for:
    - Owner: `msdkhairi`
    - Repository: `ipynb-viewer`
    - Workflow: `release.yml`
    - Environment: `pypi`
 
-`Owner` is the GitHub repository owner, not the PyPI username.
+`Owner` is the GitHub repository owner, not the PyPI username. The GitHub
+repository can remain `ipynb-viewer` even though the PyPI distribution name is
+`ipynb-local-viewer`.
 
 Release flow:
 
@@ -168,4 +171,4 @@ python -m twine upload dist/*
 
 ## License
 
-`ipynb-viewer` is distributed under the MIT License. See [LICENSE](LICENSE).
+`ipynb-local-viewer` is distributed under the MIT License. See [LICENSE](LICENSE).

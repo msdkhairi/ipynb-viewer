@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Security fixes are provided for the latest released version of `ipynb-viewer`.
+Security fixes are provided for the latest released version of `ipynb-local-viewer`.
 
 ## Reporting A Vulnerability
 
@@ -17,7 +17,7 @@ Python version, operating system, and a minimal notebook when possible.
 
 ## Security Model
 
-`ipynb-viewer` is a local reader for saved notebooks.
+`ipynb-local-viewer` is a local reader for saved notebooks.
 
 - It does not execute notebook code.
 - It restricts notebook file access to the configured `--root`.
