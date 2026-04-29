@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-04-29
+
+### Fixed
+
+- Fixed demo notebook discovery when packaged demo notebooks are copied under
+  `.notebook_viewer_cache/demo_runs/`.
+- Demo launches such as `notebook-viewer --demo visual_story` no longer show
+  `No notebooks found under the configured root`.
+
 ## [0.1.0] - 2026-04-28
 
 ### Added
