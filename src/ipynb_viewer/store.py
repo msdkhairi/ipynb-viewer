@@ -183,7 +183,7 @@ class NotebookStore:
     def list_notebooks(self) -> List[Dict[str, Any]]:
         notebooks: List[Dict[str, Any]] = []
         for path in self.root.rglob("*.ipynb"):
-            if ".ipynb_checkpoints" in path.parts or self.cache_dir.name in path.parts:
+            if ".ipynb_checkpoints" in path.parts or _is_inside(path, self.cache_dir):
                 continue
             try:
                 rel = self.rel_path(path)
@@ -244,6 +244,7 @@ class NotebookStore:
             "cellCount": len(parsed.cells),
             "sectionCount": len(parsed.sections),
             "size": parsed.size,
+            "mtimeNs": str(parsed.mtime_ns),
             "outline": outline,
         }
 
@@ -329,6 +330,14 @@ class NotebookStore:
             cached_path, cached_mtime, cached_size, _ = key
             if cached_path == path and (cached_mtime != mtime_ns or cached_size != size):
                 self._section_cache.pop(key, None)
+
+
+def _is_inside(path: Path, parent: Path) -> bool:
+    try:
+        path.resolve().relative_to(parent.resolve())
+        return True
+    except ValueError:
+        return False
 
 
 def serialize_cell(

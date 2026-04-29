@@ -12,6 +12,11 @@ const state = {
   loadObserver: null,
   activeFrame: 0,
   progressFrame: 0,
+  demoMode: false,
+  demoRunId: "",
+  demoPollTimer: 0,
+  demoRefreshing: false,
+  notebookSignature: "",
   maxSectionCacheEntries: config.maxSectionCacheEntries || 24,
   prefetchDistance: config.sectionPrefetchDistance || 1,
 };
@@ -117,6 +122,7 @@ async function loadNotebook(path) {
   setSkeleton("Loading");
   try {
     state.notebook = await api(`/api/notebook?path=${encodeURIComponent(path)}`);
+    state.notebookSignature = notebookSignature(state.notebook);
     $("notebook-meta").textContent = `${state.notebook.sectionCount} sections - ${state.notebook.cellCount} cells - ${fmtBytes(state.notebook.size)}`;
     renderNotebooks();
     renderOutline();
@@ -128,6 +134,86 @@ async function loadNotebook(path) {
     showToast(err.message);
     $("cells").className = "empty";
     $("cells").textContent = err.message;
+  }
+}
+
+function notebookSignature(notebook) {
+  if (!notebook) return "";
+  return `${notebook.size || 0}:${notebook.mtimeNs || 0}`;
+}
+
+function renderDemoStatus(status) {
+  const box = $("demo-status");
+  const label = $("demo-status-text");
+  if (!state.demoMode || !status) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  box.className = `demo-status ${status.status || "running"}`;
+  const total = Math.max(0, Number(status.total) || 0);
+  const executed = Math.max(0, Number(status.executed) || 0);
+  if (status.status === "complete") {
+    label.textContent = `Demo complete · ${executed}/${total} cells`;
+  } else if (status.status === "failed") {
+    label.textContent = `Demo failed · ${status.error || "see notebook output"}`;
+  } else {
+    label.textContent = `Running demo · ${executed}/${total} cells`;
+  }
+}
+
+async function refreshLoadedSectionsFromNotebook() {
+  if (!state.path || state.demoRefreshing) return;
+  state.demoRefreshing = true;
+  try {
+    const nextNotebook = await api(`/api/notebook?path=${encodeURIComponent(state.path)}`);
+    const nextSignature = notebookSignature(nextNotebook);
+    if (nextSignature === state.notebookSignature) return;
+
+    const previousSection = state.section;
+    const loaded = [...state.loadedSections];
+    state.notebook = nextNotebook;
+    state.notebookSignature = nextSignature;
+    $("notebook-meta").textContent = `${state.notebook.sectionCount} sections - ${state.notebook.cellCount} cells - ${fmtBytes(state.notebook.size)}`;
+    renderOutline();
+
+    state.sectionCache.clear();
+    state.sectionRequests.clear();
+    state.loadedSections = new Set();
+    state.loadingSections = new Set();
+
+    for (const item of state.notebook.outline) {
+      const section = document.getElementById(`reader-section-${item.id}`);
+      if (!section) continue;
+      section.style.setProperty("--estimated-height", `${item.estimatedHeight || 720}px`);
+      const meta = section.querySelector(".section-block-meta");
+      if (meta) meta.textContent = sectionMetaText(item);
+    }
+
+    for (const id of loaded) {
+      if (id >= 0 && id < state.notebook.outline.length) await loadSectionBody(id);
+    }
+    setActiveSection(Math.min(previousSection, Math.max(0, state.notebook.outline.length - 1)));
+    updateProgress();
+  } catch (err) {
+    showToast(err.message || "Could not refresh demo output");
+  } finally {
+    state.demoRefreshing = false;
+  }
+}
+
+async function pollDemoStatus() {
+  if (!state.demoMode || !state.demoRunId) return;
+  try {
+    const status = await api(`/api/demo-status?run_id=${encodeURIComponent(state.demoRunId)}`);
+    renderDemoStatus(status);
+    await refreshLoadedSectionsFromNotebook();
+    if (status.status === "running" || status.status === "pending") {
+      state.demoPollTimer = setTimeout(pollDemoStatus, 1200);
+    }
+  } catch (err) {
+    showToast(err.message || "Could not read demo status");
+    state.demoPollTimer = setTimeout(pollDemoStatus, 2500);
   }
 }
 
@@ -412,12 +498,15 @@ async function boot() {
     const apiConfig = await api("/api/config");
     state.prefetchDistance = apiConfig.sectionPrefetchDistance || state.prefetchDistance;
     state.maxSectionCacheEntries = apiConfig.maxSectionCacheEntries || state.maxSectionCacheEntries;
+    state.demoMode = Boolean(apiConfig.demoMode);
+    state.demoRunId = apiConfig.demoRunId || "";
     state.notebooks = await api("/api/notebooks");
     if (!state.notebooks.length) throw new Error("No notebooks found under the configured root.");
     const preferred = apiConfig.defaultNotebook || state.notebooks[0].path;
     state.path = state.notebooks.some(item => item.path === preferred) ? preferred : state.notebooks[0].path;
     renderNotebooks();
     await loadNotebook(state.path);
+    if (state.demoMode) pollDemoStatus();
   } catch (err) {
     showToast(err.message);
     $("cells").className = "empty";

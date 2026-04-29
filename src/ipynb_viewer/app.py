@@ -6,6 +6,7 @@ from typing import Optional
 from flask import Flask, Response, jsonify, render_template, request, send_file
 
 from .config import CACHE_DIR_NAME, MAX_SECTION_CACHE_ENTRIES, SECTION_PREFETCH_DISTANCE
+from .demos import get_demo_status
 from .store import NotebookStore
 
 
@@ -15,10 +16,16 @@ def api_error(exc: Exception, status: int = 400):
     return jsonify({"ok": False, "error": str(exc)}), status
 
 
-def create_app(root: str | Path = ".", default_notebook: Optional[str] = None) -> Flask:
+def create_app(
+    root: str | Path = ".",
+    default_notebook: Optional[str] = None,
+    *,
+    demo_run_id: Optional[str] = None,
+) -> Flask:
     app = Flask(__name__, template_folder="templates", static_folder="static")
     store = NotebookStore(Path(root), default_notebook)
     app.config["NOTEBOOK_STORE"] = store
+    app.config["DEMO_RUN_ID"] = demo_run_id or ""
 
     @app.after_request
     def add_headers(response: Response) -> Response:
@@ -44,6 +51,8 @@ def create_app(root: str | Path = ".", default_notebook: Optional[str] = None) -
                     "defaultNotebook": store.default_notebook or "",
                     "sectionPrefetchDistance": SECTION_PREFETCH_DISTANCE,
                     "maxSectionCacheEntries": MAX_SECTION_CACHE_ENTRIES,
+                    "demoMode": bool(app.config["DEMO_RUN_ID"]),
+                    "demoRunId": app.config["DEMO_RUN_ID"],
                 },
             }
         )
@@ -86,5 +95,14 @@ def create_app(root: str | Path = ".", default_notebook: Optional[str] = None) -
         response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         return response
 
-    return app
+    @app.get("/api/demo-status")
+    def api_demo_status():
+        run_id = request.args.get("run_id") or app.config["DEMO_RUN_ID"]
+        if not run_id:
+            return jsonify({"ok": False, "error": "Demo mode is not active."}), 404
+        status = get_demo_status(run_id)
+        if status is None:
+            return jsonify({"ok": False, "error": "Demo run not found."}), 404
+        return jsonify({"ok": True, "data": status})
 
+    return app

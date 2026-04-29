@@ -8,7 +8,7 @@ Create a virtual environment with your preferred tool, then install the package
 in editable mode:
 
 ```bash
-python -m pip install -e .
+python -m pip install -e ".[demo]"
 python -m pip install build twine trove-classifiers
 ```
 
@@ -34,6 +34,6 @@ python -m trove_classifiers check pyproject.toml
 `ipynb-local-viewer` intentionally stays lightweight:
 
 - Flask app, vanilla JavaScript, no frontend build step.
-- Saved notebooks only; no code execution.
+- Normal viewing is saved notebooks only; packaged demos are the only execution path.
 - Large output media should stay out of main JSON responses.
 - HTML from notebooks should remain sanitized before rendering.

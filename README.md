@@ -13,7 +13,9 @@ syntax-highlighted expandable blocks, and large images or videos are loaded
 through lazy streamed asset URLs instead of being embedded into the main page
 payload.
 
-It reads saved notebooks only. It does not execute code.
+In normal viewing mode it reads saved notebooks only and does not execute code.
+Packaged demo notebooks can be executed explicitly with the optional `[demo]`
+extra.
 
 ## Features
 
@@ -25,6 +27,7 @@ It reads saved notebooks only. It does not execute code.
 - Local Flask server with no frontend build step.
 - Root-restricted notebook access for safer local browsing.
 - Small decoded media cache for faster repeat reads.
+- Optional live demo notebooks with scientific and visualization outputs.
 
 ## Install
 
@@ -32,10 +35,16 @@ It reads saved notebooks only. It does not execute code.
 python -m pip install ipynb-local-viewer
 ```
 
+Install the optional demo stack when you want to run the packaged examples:
+
+```bash
+python -m pip install "ipynb-local-viewer[demo]"
+```
+
 For local development from a checkout:
 
 ```bash
-python -m pip install -e .
+python -m pip install -e ".[demo]"
 ```
 
 ## Quick Start
@@ -58,21 +67,39 @@ Start without opening a browser:
 notebook-viewer --root . --notebook analysis.ipynb --port 8770 --no-browser
 ```
 
+Run a packaged live demo:
+
+```bash
+notebook-viewer --demo quickstart --port 8770
+notebook-viewer --demo.signal_lab --port 8770
+```
+
 Stop a foreground server with `Ctrl-C`.
 
 ## CLI
 
 ```bash
-notebook-viewer [--root ROOT] [--notebook NOTEBOOK] [--host HOST] [--port PORT] [--no-browser]
+notebook-viewer [--root ROOT] [--notebook NOTEBOOK] [--demo DEMO] [--list-demos] [--host HOST] [--port PORT] [--no-browser]
 ```
 
 Options:
 
 - `--root`: directory that readable notebooks must stay inside, default `.`
 - `--notebook`: notebook path relative to `--root`
+- `--demo`: copy and run a packaged demo notebook
+- `--demo.NAME`: shorthand for `--demo NAME`, for example `--demo.motion_demo`
+- `--list-demos`: list packaged demos and exit
 - `--host`: bind host, default `0.0.0.0`
 - `--port`: bind port, default `8770`
 - `--no-browser`: do not open a browser automatically
+
+Packaged demos:
+
+- `quickstart`: markdown, stdout, a plot, a table, and collapsed code.
+- `signal_lab`: NumPy/SciPy signal synthesis, filtering, FFT, and spectrograms.
+- `visual_story`: generated images, color maps, and SVG output.
+- `interactive_charts`: pandas, seaborn, Plotly-style HTML, and sanitized rich output.
+- `motion_demo`: a small generated animation for lazy media loading.
 
 ## How It Works
 
@@ -99,6 +126,7 @@ The local server exposes a small JSON/asset API:
 - `GET /api/notebook?path=...`: return outline and section metadata
 - `GET /api/section?path=...&section=...`: return cells for one section
 - `GET /api/asset/<asset_id>`: stream decoded media assets
+- `GET /api/demo-status?run_id=...`: return live demo execution status
 
 Notebook and section JSON responses avoid embedding large base64 media payloads.
 
@@ -106,10 +134,12 @@ Notebook and section JSON responses avoid embedding large base64 media payloads.
 
 `ipynb-local-viewer` is a local reader, not a notebook execution environment.
 
-- It never runs notebook code.
+- It never runs user-selected notebook code.
+- Demo mode only runs packaged demo notebooks and must be started explicitly.
 - It restricts notebook access to the configured `--root`.
 - It sanitizes markdown-rendered HTML and notebook HTML outputs.
 - It serves decoded media assets from `.notebook_viewer_cache/`.
+- Demo run copies are written under `.notebook_viewer_cache/demo_runs/`.
 
 As with any local web server, bind it only where you intend to expose it. The
 default host is `0.0.0.0`; use `--host 127.0.0.1` for loopback-only access.

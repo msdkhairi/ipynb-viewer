@@ -14,4 +14,5 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - Sanitized markdown and rich HTML rendering.
 - Collapsed, syntax-highlighted code cells.
 - Light, dark, and device theme modes.
+- Optional packaged demo notebooks with live execution status.
 - Package metadata, CLI entry point, and PyPI-ready distribution artifacts.
