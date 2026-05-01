@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ipynb-local-viewer"
-version = "0.1.0"
+version = "0.1.1"
 description = "A smooth local reader for saved Jupyter notebooks with lazy media output streaming."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -39,6 +39,21 @@ dependencies = [
     "Pygments>=2.17",
 ]
 
+[project.optional-dependencies]
+demo = [
+    "nbclient>=0.10",
+    "nbformat>=5.10",
+    "ipykernel>=6.29",
+    "IPython>=8",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "Pillow>=10",
+    "seaborn>=0.13",
+    "plotly>=5.20",
+]
+
 [project.urls]
 Homepage = "https://github.com/msdkhairi/ipynb-viewer"
 Repository = "https://github.com/msdkhairi/ipynb-viewer"
@@ -55,4 +70,4 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-ipynb_viewer = ["templates/*.html", "static/*.css", "static/*.js"]
+ipynb_viewer = ["templates/*.html", "static/*.css", "static/*.js", "demo_notebooks/*.ipynb", "demo_notebooks/assets/*"]

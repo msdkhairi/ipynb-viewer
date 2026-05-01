@@ -19,7 +19,8 @@ Python version, operating system, and a minimal notebook when possible.
 
 `ipynb-local-viewer` is a local reader for saved notebooks.
 
-- It does not execute notebook code.
+- It does not execute user-selected notebook code.
+- Demo mode executes only packaged demo notebooks and must be started explicitly.
 - It restricts notebook file access to the configured `--root`.
 - It sanitizes markdown-rendered HTML and rich HTML outputs.
 - It streams decoded media assets from a local cache directory.

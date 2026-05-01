@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">ipynb-local-viewer showcase preview</title>
+  <desc id="desc">A preview of the local notebook viewer with an outline, report reader, chart output, table output, and collapsed code.</desc>
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f8f6"/>
+      <stop offset="1" stop-color="#eef4f0"/>
+    </linearGradient>
+    <linearGradient id="progress" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#087f5b"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#14231c" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="680" fill="url(#page)"/>
+  <rect x="54" y="46" width="1092" height="588" rx="18" fill="#ffffff" stroke="#dbe3dc" filter="url(#shadow)"/>
+
+  <rect x="54" y="46" width="1092" height="58" rx="18" fill="#ffffff"/>
+  <path d="M54 86 h1092" stroke="#dbe3dc"/>
+  <text x="82" y="82" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#17211c">Notebook Viewer</text>
+  <rect x="260" y="63" width="360" height="28" rx="7" fill="#f1f5f0" stroke="#dbe3dc"/>
+  <text x="276" y="82" font-family="Inter, Arial, sans-serif" font-size="13" fill="#66746b">rich_report.ipynb</text>
+  <rect x="852" y="61" width="104" height="32" rx="8" fill="#f1f5f0" stroke="#dbe3dc"/>
+  <rect x="886" y="64" width="30" height="26" rx="6" fill="#ffffff"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7">
+    <rect x="862" y="69" width="14" height="10" rx="2" stroke="#66746b"/>
+    <path d="M867 83h4M869 79v4" stroke="#66746b"/>
+    <circle cx="901" cy="77" r="4" stroke="#064e3b"/>
+    <path d="M901 67v2M901 85v2M891 77h2M909 77h2M894 70l1.4 1.4M906.6 82.6l1.4 1.4M894 84l1.4-1.4M906.6 71.4l1.4-1.4" stroke="#064e3b"/>
+    <path d="M943 81a7 7 0 0 1-8-9 6 6 0 1 0 8 9Z" stroke="#66746b"/>
+  </g>
+  <rect x="982" y="63" width="126" height="28" rx="14" fill="#dff6ed" stroke="#9bd8c1"/>
+  <text x="1000" y="82" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#064e3b">6 sections</text>
+
+  <rect x="54" y="104" width="268" height="530" fill="#fbfcfb"/>
+  <path d="M322 104 v530" stroke="#dbe3dc"/>
+  <text x="82" y="143" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#66746b">OUTLINE</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="14">
+    <rect x="74" y="166" width="224" height="40" rx="8" fill="#dff6ed"/>
+    <rect x="83" y="175" width="4" height="22" rx="2" fill="#087f5b"/>
+    <text x="99" y="191" font-weight="700" fill="#064e3b">Rich Report</text>
+    <circle cx="277" cy="186" r="11" fill="#ffffff" stroke="#b9c8bd"/>
+    <text x="273" y="191" font-size="11" font-weight="700" fill="#66746b">2</text>
+
+    <rect x="74" y="214" width="224" height="38" rx="8" fill="#ffffff"/>
+    <text x="99" y="238" font-weight="650" fill="#17211c">Trend and mix</text>
+    <circle cx="277" cy="233" r="11" fill="#f1f5f0" stroke="#dbe3dc"/>
+    <text x="273" y="238" font-size="11" fill="#66746b">1</text>
+
+    <rect x="74" y="260" width="224" height="38" rx="8" fill="#ffffff"/>
+    <text x="99" y="284" font-weight="650" fill="#17211c">Generated image</text>
+    <circle cx="277" cy="279" r="11" fill="#f1f5f0" stroke="#dbe3dc"/>
+    <text x="273" y="284" font-size="11" fill="#66746b">1</text>
+
+    <rect x="74" y="306" width="224" height="38" rx="8" fill="#ffffff"/>
+    <text x="99" y="330" font-weight="650" fill="#17211c">Decision block</text>
+    <circle cx="277" cy="325" r="11" fill="#f1f5f0" stroke="#dbe3dc"/>
+    <text x="273" y="330" font-size="11" fill="#66746b">1</text>
+  </g>
+
+  <rect x="322" y="104" width="824" height="7" fill="#f7f8f6"/>
+  <rect x="322" y="104" width="410" height="7" fill="url(#progress)"/>
+  <rect x="362" y="136" width="744" height="64" fill="#ffffff"/>
+  <text x="362" y="164" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800" fill="#17211c">Rich Report</text>
+  <text x="362" y="188" font-family="Inter, Arial, sans-serif" font-size="13" fill="#66746b">4 cells in this section</text>
+  <rect x="830" y="145" width="276" height="40" rx="10" fill="#f1f5f0" stroke="#dbe3dc"/>
+  <rect x="836" y="148" width="126" height="34" rx="7" fill="#ffffff"/>
+  <g fill="none" stroke="#66746b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
+    <path d="m857 159-6 5 6 5"/>
+    <path d="m873 159 6 5-6 5"/>
+    <path d="m868 155-6 18"/>
+  </g>
+  <text x="888" y="170" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#17211c">Show code</text>
+  <rect x="966" y="148" width="134" height="34" rx="7" fill="#ffffff"/>
+  <g fill="none" stroke="#66746b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
+    <path d="m987 160-5 4 5 4"/>
+    <path d="m1003 160 5 4-5 4"/>
+    <path d="M980 155h30"/>
+    <path d="M980 173h30"/>
+  </g>
+  <text x="1018" y="170" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#17211c">Hide code</text>
+
+  <text x="362" y="238" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#17211c">Executive analysis</text>
+  <text x="362" y="267" font-family="Inter, Arial, sans-serif" font-size="15" fill="#66746b">Outputs are shown first, source stays available on demand.</text>
+
+  <rect x="362" y="294" width="744" height="120" rx="8" fill="#fbfcfb" stroke="#dbe3dc"/>
+  <g font-family="Inter, Arial, sans-serif" font-size="13">
+    <text x="386" y="326" font-weight="800" fill="#17211c">Region</text>
+    <text x="568" y="326" font-weight="800" fill="#17211c">Notebooks</text>
+    <text x="750" y="326" font-weight="800" fill="#17211c">Media</text>
+    <text x="920" y="326" font-weight="800" fill="#17211c">Saved</text>
+    <path d="M382 340 h696" stroke="#dbe3dc"/>
+    <text x="386" y="366" fill="#17211c">North</text>
+    <text x="568" y="366" fill="#17211c">617</text>
+    <text x="750" y="366" fill="#17211c">712 MB</text>
+    <text x="920" y="366" fill="#17211c">162 min</text>
+    <text x="386" y="394" fill="#17211c">South</text>
+    <text x="568" y="394" fill="#17211c">548</text>
+    <text x="750" y="394" fill="#17211c">603 MB</text>
+    <text x="920" y="394" fill="#17211c">137 min</text>
+  </g>
+
+  <rect x="362" y="436" width="455" height="142" rx="8" fill="#ffffff" stroke="#dbe3dc"/>
+  <polyline points="394,543 446,521 498,512 550,487 602,477 654,453 706,461 766,437" fill="none" stroke="#087f5b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M394 543 C460 524 524 532 582 492 S704 452 766 437 L766 556 L394 556 Z" fill="#dff6ed" opacity="0.8"/>
+  <text x="386" y="466" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="800" fill="#17211c">Lazy chart asset</text>
+  <text x="386" y="488" font-family="Inter, Arial, sans-serif" font-size="12" fill="#66746b">Rendered from notebook output</text>
+
+  <rect x="838" y="436" width="268" height="142" rx="8" fill="#111827" stroke="#25334a"/>
+  <text x="860" y="466" font-family="SFMono-Regular, Consolas, monospace" font-size="13" fill="#94a3b8">Python - not run - 18 lines</text>
+  <path d="M860 486 h206" stroke="#25334a"/>
+  <text x="860" y="516" font-family="SFMono-Regular, Consolas, monospace" font-size="13" fill="#c084fc">details</text>
+  <text x="925" y="516" font-family="SFMono-Regular, Consolas, monospace" font-size="13" fill="#dbeafe">collapsed by default</text>
+  <text x="860" y="546" font-family="SFMono-Regular, Consolas, monospace" font-size="13" fill="#86efac">outputs first</text>
+</svg>

@@ -14,6 +14,38 @@ window.NOTEBOOK_VIEWER_CONFIG = {
 </script>
 </head>
 <body data-theme="device">
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="icon-device" viewBox="0 0 24 24">
+    <rect x="4" y="5" width="16" height="11" rx="2"></rect>
+    <path d="M9 20h6"></path>
+    <path d="M12 16v4"></path>
+  </symbol>
+  <symbol id="icon-sun" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </symbol>
+  <symbol id="icon-moon" viewBox="0 0 24 24">
+    <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a7 7 0 1 0 11 11Z"></path>
+  </symbol>
+  <symbol id="icon-code-expand" viewBox="0 0 24 24">
+    <path d="m8 9-4 3 4 3"></path>
+    <path d="m16 9 4 3-4 3"></path>
+    <path d="m13.5 5-3 14"></path>
+  </symbol>
+  <symbol id="icon-code-collapse" viewBox="0 0 24 24">
+    <path d="m10 9-3 3 3 3"></path>
+    <path d="m14 9 3 3-3 3"></path>
+    <path d="M4 5h16"></path>
+    <path d="M4 19h16"></path>
+  </symbol>
+</svg>
 <div id="app">
   <header class="topbar">
     <button class="icon-btn mobile-only" id="outline-toggle" type="button" aria-label="Open outline">
@@ -21,11 +53,20 @@ window.NOTEBOOK_VIEWER_CONFIG = {
     </button>
     <div class="brand">Notebook Viewer</div>
     <div class="select-wrap"><select id="notebook-select" aria-label="Notebook"></select></div>
-    <select class="theme-select" id="theme-select" aria-label="Theme">
-      <option value="device">Device</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
+    <div class="theme-control" id="theme-control" role="group" aria-label="Theme">
+      <button class="theme-option" type="button" data-theme-option="device" aria-label="Use device theme" aria-pressed="true" title="Device theme">
+        <svg class="ui-icon" aria-hidden="true"><use href="#icon-device"></use></svg>
+        <span class="sr-only">Device</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-option="light" aria-label="Use light theme" aria-pressed="false" title="Light theme">
+        <svg class="ui-icon" aria-hidden="true"><use href="#icon-sun"></use></svg>
+        <span class="sr-only">Light</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-option="dark" aria-label="Use dark theme" aria-pressed="false" title="Dark theme">
+        <svg class="ui-icon" aria-hidden="true"><use href="#icon-moon"></use></svg>
+        <span class="sr-only">Dark</span>
+      </button>
+    </div>
     <span class="meta-chip" id="notebook-meta">Loading</span>
   </header>
   <div class="workspace">
@@ -44,10 +85,20 @@ window.NOTEBOOK_VIEWER_CONFIG = {
           <div class="section-current">
             <h1 class="section-title" id="section-title">Loading</h1>
             <div class="section-meta" id="section-meta"></div>
+            <div class="demo-status" id="demo-status" hidden>
+              <span class="demo-dot"></span>
+              <span id="demo-status-text"></span>
+            </div>
           </div>
-          <div class="section-actions">
-            <button class="icon-btn" id="expand-code" type="button">Expand code</button>
-            <button class="icon-btn" id="collapse-code" type="button">Collapse code</button>
+          <div class="section-actions" aria-label="Code visibility controls">
+            <button class="action-btn" id="expand-code" type="button" aria-label="Show code for all cells" title="Show code">
+              <svg class="ui-icon" aria-hidden="true"><use href="#icon-code-expand"></use></svg>
+              <span>Show code</span>
+            </button>
+            <button class="action-btn" id="collapse-code" type="button" aria-label="Hide code for all cells" title="Hide code">
+              <svg class="ui-icon" aria-hidden="true"><use href="#icon-code-collapse"></use></svg>
+              <span>Hide code</span>
+            </button>
           </div>
         </div>
         <div id="cells" class="skeleton"><span></span><span></span><span></span><span></span></div>
