@@ -5,109 +5,112 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml/badge.svg)](https://github.com/msdkhairi/ipynb-viewer/actions/workflows/ci.yml)
 
-A smooth, local-first reader for saved Jupyter notebooks.
+A local-first reader for saved Jupyter notebooks that makes `.ipynb` files feel
+like polished reports.
 
-`ipynb-local-viewer` turns an `.ipynb` file into a fast reading surface: markdown
-headings become an outline, outputs are shown first, code is collapsed behind
-syntax-highlighted expandable blocks, and large images or videos are loaded
-through lazy streamed asset URLs instead of being embedded into the main page
-payload.
+`ipynb-local-viewer` opens notebooks in a fast Flask-powered reading surface:
+markdown headings become an outline, outputs are shown before source code, code
+is collapsed behind syntax-highlighted details, rich HTML is sanitized, and
+large image or video outputs are streamed lazily through local asset URLs.
 
-In normal viewing mode it reads saved notebooks only and does not execute code.
-Packaged demo notebooks can be executed explicitly with the optional `[demo]`
-extra.
+In normal viewing mode it reads saved notebooks only and does not execute user
+notebook code. Packaged demos can be executed explicitly with the optional
+`[demo]` extra.
 
-## Features
-
-- Markdown-derived outline with smooth section navigation.
-- Lazy image and video output loading for media-heavy notebooks.
-- Collapsed code cells with Pygments syntax highlighting.
-- Safe sanitized HTML output rendering with Bleach.
-- Light, dark, and device theme modes.
-- Local Flask server with no frontend build step.
-- Root-restricted notebook access for safer local browsing.
-- Small decoded media cache for faster repeat reads.
-- Optional live demo notebooks with scientific and visualization outputs.
-
-## Install
-
-```bash
-python -m pip install ipynb-local-viewer
-```
-
-Install the optional demo stack when you want to run the packaged examples:
-
-```bash
-python -m pip install "ipynb-local-viewer[demo]"
-```
-
-For local development from a checkout:
-
-```bash
-python -m pip install -e ".[demo]"
-```
+![ipynb-local-viewer preview](https://raw.githubusercontent.com/msdkhairi/ipynb-viewer/main/docs/assets/viewer-showcase.svg)
 
 ## Quick Start
+
+Install the viewer:
+
+```bash
+pip install ipynb-local-viewer
+```
 
 Open a notebook on `http://localhost:8770`:
 
 ```bash
-notebook-viewer --notebook analysis.ipynb --port 8770
+notebook-viewer --notebook analysis.ipynb --host 127.0.0.1 --port 8770
 ```
 
-Restrict the viewer to a specific project directory:
+Restrict browsing to a project directory:
 
 ```bash
-notebook-viewer --root ~/projects/my-analysis --notebook notebooks/report.ipynb --port 8770
-```
-
-Start without opening a browser:
-
-```bash
-notebook-viewer --root . --notebook analysis.ipynb --port 8770 --no-browser
-```
-
-Run a packaged live demo:
-
-```bash
-notebook-viewer --demo quickstart --port 8770
-notebook-viewer --demo.signal_lab --port 8770
+notebook-viewer --root ~/projects/my-analysis --notebook notebooks/report.ipynb --host 127.0.0.1
 ```
 
 Stop a foreground server with `Ctrl-C`.
 
-## CLI
+## Try The Demos
+
+Install the optional demo stack and launch the first-run tour:
+
+```bash
+pip install "ipynb-local-viewer[demo]"
+notebook-viewer --demo quickstart --host 127.0.0.1
+```
+
+The demos are bundled with the package, run offline, and are designed to show
+the viewer's rendering paths without large downloads or heavy training jobs.
+
+| Demo | Run it | What it shows |
+| --- | --- | --- |
+| Quickstart Tour | `notebook-viewer --demo quickstart` | Outline navigation, output-first reading, tables, charts, sanitized HTML, and collapsed source. |
+| Rich Report | `notebook-viewer --demo rich_report` | A compact executive report with KPI tables, static charts, generated imagery, and HTML callouts. |
+| Signal Lab | `notebook-viewer --demo signal_lab` | A deterministic NumPy/SciPy workflow with filtering, frequency analysis, and spectrograms. |
+| Interactive Charts | `notebook-viewer --demo interactive_charts` | Pandas, seaborn, matplotlib, and Plotly-generated HTML with a safe fallback. |
+| Visual Story | `notebook-viewer --demo visual_story` | Generated images, color fields, and SVG output served as lazy assets. |
+| Motion Demo | `notebook-viewer --demo motion_demo` | A tiny packaged MP4 and generated frame strip for lazy video/image loading. |
+
+List the demos from any installed environment:
+
+```bash
+notebook-viewer --list-demos
+```
+
+The dotted shorthand also works:
+
+```bash
+notebook-viewer --demo.rich_report
+```
+
+## Highlights
+
+- Local reader for saved `.ipynb` files; no frontend build step.
+- Markdown-derived outline with smooth section navigation.
+- Output-first reading flow with collapsible, syntax-highlighted code.
+- Lazy image, SVG, GIF, and video asset streaming for media-heavy notebooks.
+- Sanitized markdown and notebook HTML rendering with Bleach.
+- Light, dark, and device theme modes.
+- Root-restricted notebook access for safer local browsing.
+- Packaged live demos with deterministic scientific, media, and report outputs.
+
+## CLI Reference
 
 ```bash
 notebook-viewer [--root ROOT] [--notebook NOTEBOOK] [--demo DEMO] [--list-demos] [--host HOST] [--port PORT] [--no-browser]
 ```
 
-Options:
+Common options:
 
 - `--root`: directory that readable notebooks must stay inside, default `.`
 - `--notebook`: notebook path relative to `--root`
-- `--demo`: copy and run a packaged demo notebook
-- `--demo.NAME`: shorthand for `--demo NAME`, for example `--demo.motion_demo`
+- `--demo`: copy and execute a packaged demo notebook by name
+- `--demo.NAME`: shorthand for `--demo NAME`
 - `--list-demos`: list packaged demos and exit
 - `--host`: bind host, default `0.0.0.0`
 - `--port`: bind port, default `8770`
 - `--no-browser`: do not open a browser automatically
 
-Packaged demos:
-
-- `quickstart`: markdown, stdout, a plot, a table, and collapsed code.
-- `signal_lab`: NumPy/SciPy signal synthesis, filtering, FFT, and spectrograms.
-- `visual_story`: generated images, color maps, and SVG output.
-- `interactive_charts`: pandas, seaborn, Plotly-style HTML, and sanitized rich output.
-- `motion_demo`: a small generated animation for lazy media loading.
-
 ## How It Works
 
-The viewer parses saved notebook JSON with the Python standard library and
+The server parses saved notebook JSON with the Python standard library and
 caches parsed notebooks by path, mtime, and size. Markdown headings define the
-outline. Selecting or scrolling to a section loads the cells for that section,
-while image and video outputs are represented as asset descriptors and streamed
-separately from `/api/asset/<asset_id>`.
+outline. Selecting or scrolling to a section loads the cells for that section.
+
+Notebook and section JSON responses avoid embedding large base64 media payloads:
+image and video outputs are represented as asset descriptors and streamed from
+`/api/asset/<asset_id>` when the browser needs them.
 
 Supported output behavior:
 
@@ -120,7 +123,7 @@ Supported output behavior:
 
 ## API
 
-The local server exposes a small JSON/asset API:
+Local API endpoints:
 
 - `GET /api/notebooks`: list `.ipynb` files under `--root`
 - `GET /api/notebook?path=...`: return outline and section metadata
@@ -128,31 +131,34 @@ The local server exposes a small JSON/asset API:
 - `GET /api/asset/<asset_id>`: stream decoded media assets
 - `GET /api/demo-status?run_id=...`: return live demo execution status
 
-Notebook and section JSON responses avoid embedding large base64 media payloads.
-
 ## Security Notes
 
 `ipynb-local-viewer` is a local reader, not a notebook execution environment.
 
-- It never runs user-selected notebook code.
-- Demo mode only runs packaged demo notebooks and must be started explicitly.
-- It restricts notebook access to the configured `--root`.
-- It sanitizes markdown-rendered HTML and notebook HTML outputs.
-- It serves decoded media assets from `.notebook_viewer_cache/`.
+- It never runs user-selected notebook code in normal viewing mode.
+- Demo mode runs only packaged demo notebooks and must be started explicitly.
+- Notebook access is restricted to the configured `--root`.
+- Markdown-rendered HTML and notebook HTML outputs are sanitized.
+- Decoded media assets are served from `.notebook_viewer_cache/`.
 - Demo run copies are written under `.notebook_viewer_cache/demo_runs/`.
 
-As with any local web server, bind it only where you intend to expose it. The
-default host is `0.0.0.0`; use `--host 127.0.0.1` for loopback-only access.
+As with any local web server, bind it only where you intend to expose it. Use
+`--host 127.0.0.1` for loopback-only access.
 
 ## Development
 
-Install development tools and run the test suite:
+Install locally:
 
 ```bash
-python -m pip install -e .
-python -m pip install build twine trove-classifiers tomli
+python -m pip install -e ".[demo]"
+```
+
+Run checks:
+
+```bash
 python -m unittest discover -s tests
 python -m compileall src
+python scripts/check_classifiers.py
 ```
 
 Build and validate distribution artifacts:
@@ -160,28 +166,11 @@ Build and validate distribution artifacts:
 ```bash
 python -m build
 python -m twine check dist/*
-python scripts/check_classifiers.py
 ```
 
 ## Publishing
 
 Releases are intended to use PyPI Trusted Publishing from GitHub Actions.
-
-One-time PyPI setup:
-
-1. Log into the PyPI account `masoudka`.
-2. Create or select the PyPI project `ipynb-local-viewer`.
-3. Add a pending trusted publisher for:
-   - Owner: `msdkhairi`
-   - Repository: `ipynb-viewer`
-   - Workflow: `release.yml`
-   - Environment: `pypi`
-
-`Owner` is the GitHub repository owner, not the PyPI username. The GitHub
-repository can remain `ipynb-viewer` even though the PyPI distribution name is
-`ipynb-local-viewer`.
-
-Release flow:
 
 ```bash
 git tag v0.1.0

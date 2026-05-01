@@ -33,7 +33,11 @@ function applyTheme(value) {
   const theme = ["device", "light", "dark"].includes(value) ? value : "device";
   document.body.dataset.theme = theme;
   localStorage.setItem("notebook_viewer_theme", theme);
-  $("theme-select").value = theme;
+  document.querySelectorAll("[data-theme-option]").forEach(button => {
+    const selected = button.dataset.themeOption === theme;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", selected ? "true" : "false");
+  });
 }
 
 async function api(url) {
@@ -519,7 +523,9 @@ function closeOutline() {
 }
 
 $("notebook-select").addEventListener("change", event => loadNotebook(event.target.value));
-$("theme-select").addEventListener("change", event => applyTheme(event.target.value));
+document.querySelectorAll("[data-theme-option]").forEach(button => {
+  button.addEventListener("click", () => applyTheme(button.dataset.themeOption));
+});
 $("expand-code").addEventListener("click", () => setAllCode(true));
 $("collapse-code").addEventListener("click", () => setAllCode(false));
 $("outline-toggle").addEventListener("click", () => document.body.classList.add("outline-open"));

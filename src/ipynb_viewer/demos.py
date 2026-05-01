@@ -80,32 +80,38 @@ DEMO_NOTEBOOKS: Dict[str, DemoInfo] = {
     "quickstart": DemoInfo(
         name="quickstart",
         title="Quickstart Tour",
-        description="Markdown sections, stdout, a plot, a table, and collapsed code.",
+        description="First-run tour of outline navigation, output-first reading, tables, charts, and sanitized HTML.",
         filename="quickstart.ipynb",
     ),
     "signal_lab": DemoInfo(
         name="signal_lab",
         title="Signal Lab",
-        description="NumPy/SciPy signal synthesis, filtering, FFT, and spectrogram visuals.",
+        description="Offline scientific workflow with filtering, frequency analysis, summary tables, and spectrograms.",
         filename="signal_lab.ipynb",
     ),
     "visual_story": DemoInfo(
         name="visual_story",
         title="Visual Story",
-        description="Generated images, color maps, and SVG output.",
+        description="Generated image, color-field, and SVG outputs served through lazy media assets.",
         filename="visual_story.ipynb",
     ),
     "interactive_charts": DemoInfo(
         name="interactive_charts",
         title="Interactive Charts",
-        description="Pandas, seaborn, Plotly-style HTML, and sanitized rich output.",
+        description="Pandas, seaborn, matplotlib, and Plotly-generated HTML with a sanitized fallback.",
         filename="interactive_charts.ipynb",
     ),
     "motion_demo": DemoInfo(
         name="motion_demo",
         title="Motion Demo",
-        description="A small generated animation output for lazy media loading.",
+        description="Tiny packaged MP4 and generated frame strip for checking lazy video and image output.",
         filename="motion_demo.ipynb",
+    ),
+    "rich_report": DemoInfo(
+        name="rich_report",
+        title="Rich Report",
+        description="Executive-style report with KPI tables, charts, generated imagery, and sanitized HTML.",
+        filename="rich_report.ipynb",
     ),
 }
 

@@ -252,8 +252,15 @@ class NotebookViewerTests(unittest.TestCase):
 
             self.assertEqual(response.status_code, 200)
             html = response.get_data(as_text=True)
-            self.assertIn('id="theme-select"', html)
-            self.assertIn('value="device"', html)
+            self.assertIn('id="theme-control"', html)
+            self.assertIn('role="group" aria-label="Theme"', html)
+            self.assertIn('data-theme-option="device"', html)
+            self.assertIn('data-theme-option="light"', html)
+            self.assertIn('data-theme-option="dark"', html)
+            self.assertIn('aria-label="Use device theme"', html)
+            self.assertIn('aria-pressed="true"', html)
+            self.assertIn('id="expand-code"', html)
+            self.assertIn('id="collapse-code"', html)
 
     def test_static_assets_include_dark_motion_and_lazy_cache_code(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -282,6 +289,10 @@ class NotebookViewerTests(unittest.TestCase):
             self.assertIn("Run ${cell.executionCount}", js_text)
             self.assertIn("pollDemoStatus", js_text)
             self.assertIn(".demo-status", css_text)
+            self.assertIn("[data-theme-option]", js_text)
+            self.assertIn('setAttribute("aria-pressed"', js_text)
+            self.assertIn(".theme-option.active", css_text)
+            self.assertIn(".action-btn", css_text)
             css.close()
             js.close()
 
@@ -300,6 +311,7 @@ class NotebookViewerTests(unittest.TestCase):
         listed = list_demo_notebooks()
         self.assertIn("quickstart", {item["name"] for item in listed})
         self.assertIn("motion_demo", {item["name"] for item in listed})
+        self.assertIn("rich_report", {item["name"] for item in listed})
 
     def test_cli_rejects_demo_conflicts_and_missing_demo_deps(self):
         with self.assertRaises(SystemExit):
